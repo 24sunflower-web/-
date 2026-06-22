@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리반 칭찬 배달부</title>
+    <style>
+        :root {
+            --primary-color: #ff7675;
+            --secondary-color: #ffeaa7;
+            --background-color: #f7f9fc;
+            --card-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3436;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .name-input {
+            flex: 2 !important;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: none;
+            height: 100px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #e17055;
+        }
+
+        /* 칭찬 목록 스타일 */
+        .praise-list {
+            margin-top: 30px;
+            border-top: 2px dashed #dfe6e9;
+            padding-top: 20px;
+        }
+
+        .praise-card {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .praise-header {
+            font-size: 13px;
+            color: #636e72;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .praise-content {
+            font-size: 15px;
+            color: #2d3436;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>💌 우리반 칭찬 배달부</h1>
+    
+    <form id="praiseForm">
+        <div class="section-title">🎯 칭찬 받을 친구</div>
+        <div class="form-group">
+            <input type="number" id="targetGrade" placeholder="학년" min="1" max="6" required>
+            <input type="number" id="targetClass" placeholder="반" min="1" max="15" required>
+            <input type="text" id="targetName" class="name-input" placeholder="이름" required>
+        </div>
+
+        <div class="section-title">✏️ 칭찬 한마디</div>
+        <textarea id="praiseText" placeholder="친구에게 전하고 싶은 칭찬을 적어주세요!" required></textarea>
+
+        <div class="section-title">✍️ 보내는 사람</div>
+        <div class="form-group">
+            <input type="number" id="senderGrade" placeholder="학년" min="1" max="6" required>
+            <input type="number" id="senderClass" placeholder="반" min="1" max="15" required>
+            <input type="text" id="senderName" class="name-input" placeholder="이름" required>
+        </div>
+
+        <button type="submit">칭찬 배달하기 🚀</button>
+    </form>
+
+    <div class="praise-list">
+        <h3 style="font-size: 16px; color: #2d3436;">방금 도착한 칭찬 카드 📮</h3>
+        <div id="praiseContainer">
+            </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('praiseForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // 새로고침 방지
+
+        // 입력값 가져오기
+        const targetGrade = document.getElementById('targetGrade').value;
+        const targetClass = document.getElementById('targetClass').value;
+        const targetName = document.getElementById('targetName').value;
+        const praiseText = document.getElementById('praiseText').value;
+        const senderGrade = document.getElementById('senderGrade').value;
+        const senderClass = document.getElementById('senderClass').value;
+        const senderName = document.getElementById('senderName').value;
+
+        // 칭찬 카드 HTML 생성
+        const praiseCard = document.createElement('div');
+        praiseCard.className = 'praise-card';
+        praiseCard.innerHTML = `
+            <div class="praise-header">
+                <span>To. <b>${targetGrade}학년 ${targetClass}반 ${targetName}</b></span>
+                <span>From. ${senderGrade}-${senderClass} ${senderName}</span>
+            </div>
+            <div class="praise-content">${praiseText.replace(/\n/g, '<br>')}</div>
+        `;
+
+        // 목록 맨 위에 추가하기
+        const container = document.getElementById('praiseContainer');
+        container.insertBefore(praiseCard, container.firstChild);
+
+        // 입력창 초기화 (보내는 사람 정보는 편의상 남겨두고 칭찬 내용과 받는 사람만 초기화)
+        document.getElementById('targetGrade').value = '';
+        document.getElementById('targetClass').value = '';
+        document.getElementById('targetName').value = '';
+        document.getElementById('praiseText').value = '';
+        
+        alert('칭찬이 성공적으로 배달되었습니다! 🎉');
+    });
+</script>
+
+</body>
+</html>
