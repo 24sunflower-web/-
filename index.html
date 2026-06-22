@@ -141,8 +141,11 @@
 
 <script>
     let submitted = false;
-    document.getElementById('praiseForm').addEventListener('submit', function() {
-        document.getElementById('senderNameInput').name = "entry.1030999557"; 
+
+    // 구글 폼의 특수한 전송 방식을 우회하여 스프레드시트에 강제로 꽂아넣는 마법의 코드
+    document.getElementById('praiseForm').addEventListener('submit', function(e) {
+        // 마지막 보낸 사람 이름 데이터의 유실을 막기 위해 구글 내부 데이터 이름을 강제로 동기화합니다.
+        document.getElementById('senderNameInput').name = "entry.1030999557";
     });
 </script>
 
